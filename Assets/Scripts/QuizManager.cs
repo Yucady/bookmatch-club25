@@ -168,7 +168,6 @@ public class QuizManager : MonoBehaviour
 
         if (isSuccess)
         {
-            FirebaseManager.Instance?.SavePlayerResult(playerStudentNumber, remainingTime);
             UIManager.Instance?.ShowSuccessPanel();
         }
         else
