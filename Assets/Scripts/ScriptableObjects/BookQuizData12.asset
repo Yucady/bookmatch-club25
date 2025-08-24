@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24b6867e3bf958243bee765b9289809d, type: 3}
+  m_Name: BookQuizData12
+  m_EditorClassIdentifier: 
+  bookTitle: "\uCC4512"
+  coverImage: {fileID: -2162691547057909491, guid: 2ac2ee9864bf9a5458a9c60ec5bad67d, type: 3}
+  stage1:
+  - quizType: 0
+    question: "\uCC4512\uC740 \uCC4512\uC774\uB2E4."
+    answer: O
+    choices: []
+    hint: 
+    hintDelay: 0
+  - quizType: 0
+    question: "\uCC4512\uC740 \uCC4512\uC774 \uC544\uB2C8\uB2E4"
+    answer: X
+    choices: []
+    hint: 
+    hintDelay: 0
+  stage2:
+  - quizType: 1
+    question: "\uCC4512: \uB2E4\uC74C \uC911 1\uC744 \uACE0\uB974\uC2DC\uC624"
+    answer: 1
+    choices:
+    - 1
+    - 2
+    - 3
+    - 4
+    hint: 
+    hintDelay: 0
+  - quizType: 1
+    question: "\uCC4512: \uB2E4\uC74C \uC911 22\uB97C \uACE0\uB974\uC2DC\uC624"
+    answer: 22
+    choices:
+    - 11
+    - 22
+    - 33
+    - 44
+    hint: 
+    hintDelay: 0
+  stage3:
+  - quizType: 2
+    question: "\uCC4512\uC744 \uC785\uB825\uD558\uC138\uC694"
+    answer: "\uCC4512"
+    choices: []
+    hint: "\uCC4512 \uD78C\uD2B81"
+    hintDelay: 10
+  - quizType: 2
+    question: "\uCC451212\uC744 \uC785\uB825\uD558\uC138\uC694"
+    answer: "\uCC451212"
+    choices: []
+    hint: "\uCC4512 \uD78C\uD2B82"
+    hintDelay: 10
