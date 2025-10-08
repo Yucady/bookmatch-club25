@@ -57,8 +57,8 @@ public class GameguidePanel : MonoBehaviour
         displayImage.sprite = pages[currentIndex].image;
         displayText.text = pages[currentIndex].ExplainText;
 
-        rightButton.interactable = currentIndex < pages.Length - 1;
-        leftButton.interactable = currentIndex > 0;
+        //rightButton.interactable = currentIndex < pages.Length - 1;
+        //leftButton.interactable = currentIndex > 0;
     }
 
     void ClosePanel()

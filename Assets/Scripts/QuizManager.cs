@@ -1,9 +1,11 @@
 using System.Linq;
-using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class QuizManager : MonoBehaviour
 {
+    public static QuizManager Instance { get; private set; }
+
     [SerializeField] private AllBooksQuizData allBooksData;
 
     private BookQuizData currentBook;
@@ -11,10 +13,20 @@ public class QuizManager : MonoBehaviour
     private int currentStage = 1;
 
     private string playerStudentNumber;
-    private float remainingTime;
+    
     private bool isTimerRunning = false;
+    public float remainingTime { get; private set; }
+
 
     private bool[] judges;
+
+    void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
+    }
 
     public void StartGame(string studentNumber, float startTime)
     {
@@ -113,7 +125,6 @@ public class QuizManager : MonoBehaviour
         if (isCorrect)
         {
             judges[currentStage - 1] = true; // judges 에 정답 여부 저장 -> 정답 갯수에 따라 결과 패널에서의 별의 개수 변화
-                                             // 전부 true 일 경우 Firebase 연결 그리고 전부 true 가 아니더라도 모든 스테이지 진행
             //Debug.Log("judges: " + currentStage + $"{isCorrect}");
         }
         else
@@ -143,36 +154,110 @@ public class QuizManager : MonoBehaviour
                 GameEnd(false);
             }
         }
-
-        
-        
-        //if (isCorrect) // 수정할 부분
-        //{
-        //    currentStage++;
-        //    Debug.Log($"Moving to stage {currentStage}");
-        //    if (currentStage <= 3)
-        //        LoadQuiz(currentStage);
-        //    else
-        //        GameEnd(true);
-        //}
-        //else
-        //{
-        //    GameEnd(false);
-        //}
     }
 
 
     private void GameEnd(bool isSuccess)
     {
+        Debug.Log($"BackendLogin.Instance: {(BackendLogin.Instance == null ? "NULL" : "OK")}");
+        Debug.Log($"GameInitializer.Instance: {(GameInitializer.Instance == null ? "NULL" : "OK")}");
+
         isTimerRunning = false;
 
-        if (isSuccess)
+        if (!isSuccess)
         {
-            UIManager.Instance?.ShowSuccessPanel();
+            UIManager.Instance?.ShowFailPanel();
+            return;
+        }
+
+        UIManager.Instance?.ShowSuccessPanel();
+
+        string studentNum = GameInitializer.Instance.studentNumber;
+
+        // 로그인 상태 확인 후 처리
+        if (!BackendLogin.Instance.IsLoggedIn)
+        {
+            BackendLogin.Instance.CustomLogin(studentNum, studentNum, loginCallback =>
+            {
+                if (!loginCallback.IsSuccess())
+                {
+                    Debug.LogError($"로그인 실패: {loginCallback}");
+                    return;
+                }
+
+                Debug.Log("로그인 성공");
+
+                // 닉네임 업데이트는 중복 시 무시
+                BackendLogin.Instance.UpdateNickname(studentNum, nicknameCallback =>
+                {
+                    if (!nicknameCallback.IsSuccess())
+                        Debug.LogWarning($"닉네임 업데이트 실패: {nicknameCallback}");
+                    else
+                        Debug.Log("닉네임 업데이트 성공");
+
+                    // 모든 준비 완료 → 게임 데이터 & 랭킹 처리
+                    HandleGameDataAndRank(studentNum);
+                });
+            });
         }
         else
         {
-            UIManager.Instance?.ShowFailPanel();
+            // 이미 로그인 상태이면 바로 게임 데이터 & 랭킹 처리
+            HandleGameDataAndRank(studentNum);
         }
+    }
+
+    // -----------------------------
+    // 게임 데이터 조회/삽입/업데이트 후 최고 점수 기준 랭킹 등록
+    private void HandleGameDataAndRank(string studentNum)
+    {
+        BackendGameData.Instance.GameDataGet(getCallback =>
+        {
+            if (BackendGameData.userData == null)
+            {
+                // 데이터 없으면 삽입
+                BackendGameData.Instance.GameDataInsert(remainingTime, studentNum, insertCallback =>
+                {
+                    if (insertCallback.IsSuccess())
+                    {
+                        Debug.Log("게임 데이터 삽입 완료");
+                        BackendRank.Instance.RankInsertHighScore(remainingTime, studentNum);
+                        BackendRank.Instance.RankGet();
+                    }
+                    else
+                    {
+                        Debug.LogError("게임 데이터 삽입 실패: " + insertCallback);
+                    }
+                });
+            }
+            else
+            {
+                // 데이터 존재하면 업데이트
+                BackendGameData.Instance.GameDataUpdate(updateCallback =>
+                {
+                    if (updateCallback.IsSuccess())
+                    {
+                        Debug.Log("게임 데이터 업데이트 완료");
+                        BackendRank.Instance.RankInsertHighScore(remainingTime, studentNum);
+                        BackendRank.Instance.RankGet();
+                    }
+                    else
+                    {
+                        Debug.LogError("게임 데이터 업데이트 실패: " + updateCallback);
+                    }
+                });
+            }
+        });
+    }
+
+    public void ResetData()
+    {
+        currentStage = 1;
+        remainingTime = 0f;
+        isTimerRunning = false;
+        judges = null;
+        currentBook = null;
+        currentQuiz = null;
+        playerStudentNumber = null;
     }
 }

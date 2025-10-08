@@ -1,5 +1,7 @@
+using BackEnd;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
@@ -33,7 +35,10 @@ public class UIManager : MonoBehaviour
 
     [Header("결과 패널")]
     [SerializeField] private GameObject resultPanel;
+    [SerializeField] private GameObject rankingPanel;
     [SerializeField] private TextMeshProUGUI resultText;
+
+    public RankUIGameScene rankingPopup;
 
     private void Awake()
     {
@@ -136,16 +141,83 @@ public class UIManager : MonoBehaviour
         resultPanel.SetActive(true);
         resultText.text = "성공!";
     }
+    
+    public void ShowRankingPanel()
+    {
+        rankingPopup.Open();
 
-    /// <summary>
-    /// 타이머 텍스트 업데이트 함수 추가
-    /// </summary>
+        //resultPanel.SetActive(false);
+        //rankingPanel.SetActive(true);
+
+        // 랭킹 불러오기 실행
+        //BackendRank.Instance.RankGet();
+    }
+
+    public void CloseRankingPanel()
+    {
+        rankingPanel.SetActive(false);
+        //resultPanel.SetActive(true);
+    }
+
     public void UpdateTimer(float timeRemaining)
     {
         int minutes = Mathf.FloorToInt(timeRemaining / 60);
         int seconds = Mathf.FloorToInt(timeRemaining % 60);
         timerText.text = $"{minutes:00}:{seconds:00}";
     }
+
+    // ---------------------------------------------
+    // 뒤끝 로그아웃 + 게임 재시작
+    // ---------------------------------------------
+
+    public void OnRestartButtonClicked()
+    {
+        Debug.Log("Restart 버튼 클릭됨. 게임 상태 완전 초기화 진행.");
+
+        // 1. 뒤끝 로그아웃
+        var logout = Backend.BMember.Logout();
+        if (logout.IsSuccess())
+            Debug.Log("뒤끝 로그아웃 성공");
+        else
+            Debug.LogWarning("뒤끝 로그아웃 실패: " + logout);
+
+        // 2. PlayerPrefs 초기화
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
+
+        // 3. 싱글톤/게임 데이터 초기화
+        var quizMgr = FindFirstObjectByType<QuizManager>();
+        if (quizMgr != null)
+            quizMgr.ResetData();
+
+        // 4. GameInitializer 제거
+        if (GameInitializer.Instance != null)
+            Destroy(GameInitializer.Instance.gameObject);
+
+        // 5. BackendManager 제거 → Backend 완전 초기화
+        var backendMgr = FindFirstObjectByType<BackendManager>();
+        if (backendMgr != null)
+            Destroy(backendMgr.gameObject);
+
+        // 6. MainMenuScene 로드
+        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenuScene");
+    }
+
+    // ---------------------------------------------
+    // 싱글톤/게임 데이터 초기화
+    // ---------------------------------------------
+    private void ResetSingletons()
+    {
+        // QuizManager 초기화
+        var quizMgr = FindFirstObjectByType<QuizManager>();
+        if (quizMgr != null)
+            quizMgr.ResetData();
+
+        // 필요 시 다른 싱글톤도 초기화 가능
+        // 예: BackendGameData.Instance.ResetData();
+        // 예: BackendRank.Instance.ResetData();
+    }
+
 
     private QuizManager QuizManagerRef => FindFirstObjectByType<QuizManager>();
 }
