@@ -12,52 +12,66 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24b6867e3bf958243bee765b9289809d, type: 3}
   m_Name: BookQuizData9
   m_EditorClassIdentifier: 
-  bookTitle: "\uCC459"
+  bookTitle: "\uC720\uD1A0\uD53C\uC544 - _____"
+  quizCreator: "2327 \uC815\uC720\uB9AC"
   coverImage: {fileID: -5023061043103472908, guid: 56ba8398a481f4b4588a667601be3aa3, type: 3}
   stage1:
   - quizType: 0
-    question: "\uCC459\uC740 \uCC459\uC774\uB2E4."
+    question: "\u300E\uC720\uD1A0\uD53C\uC544\u300F\uB294 \uD1A0\uB9C8\uC2A4 \uBAA8\uC5B4\uAC00
+      \uC9C0\uC740 \uCC45\uC774\uB2E4."
     answer: O
     choices: []
     hint: 
     hintDelay: 0
   - quizType: 0
-    question: "\uCC459\uC740 \uCC459\uC774 \uC544\uB2C8\uB2E4"
+    question: "\uC720\uD1A0\uD53C\uC544\uC5D0\uC11C\uB294 \uAC1C\uC778\uC758 \uC0AC\uC720
+      \uC7AC\uC0B0\uC744 \uCCA0\uC800\uD788 \uBCF4\uD638\uD55C\uB2E4."
     answer: X
     choices: []
     hint: 
     hintDelay: 0
   stage2:
   - quizType: 1
-    question: "\uCC459: \uB2E4\uC74C \uC911 1\uC744 \uACE0\uB974\uC2DC\uC624"
-    answer: 1
+    question: "\u300E\uC720\uD1A0\uD53C\uC544\u300F\uC5D0\uC11C \uBB18\uC0AC\uB418\uB294
+      \uC774\uC0C1 \uC0AC\uD68C\uB294 \uC5B4\uB5A4 \uC6D0\uCE59\uC5D0 \uAC00\uC7A5
+      \uAC00\uAE4C\uC6B4\uAC00?"
+    answer: "\uC0AC\uD68C\uC8FC\uC758"
     choices:
-    - 1
-    - 2
-    - 3
-    - 4
+    - "\uC790\uBCF8\uC8FC\uC758"
+    - "\uC0AC\uD68C\uC8FC\uC758"
+    - "\uAD70\uC8FC\uC81C"
+    - "\uC790\uC720\uBC29\uC784\uC8FC\uC758"
     hint: 
     hintDelay: 0
   - quizType: 1
-    question: "\uCC459: \uB2E4\uC74C \uC911 22\uB97C \uACE0\uB974\uC2DC\uC624"
-    answer: 22
+    question: "\uC720\uD1A0\uD53C\uC544\uC758 \uB178\uB3D9 \uC81C\uB3C4\uC5D0 \uB300\uD55C
+      \uC124\uBA85\uC73C\uB85C \uC633\uC740 \uAC83\uC740?"
+    answer: "\uBAA8\uB4E0 \uC2DC\uBBFC\uC774 \uB178\uB3D9\uC744 \uB098\uB204\uC5B4
+      \uD558\uACE0, \uC77C\uACFC \uD6C4 \uC5EC\uAC00\uB97C \uC990\uAE34\uB2E4."
     choices:
-    - 11
-    - 22
-    - 33
-    - 44
+    - "\uADC0\uC871\uACFC \uD3C9\uBBFC\uC774 \uBA85\uD655\uD788 \uB098\uB25C \uACC4\uAE09
+      \uC0AC\uD68C\uB2E4."
+    - "\uBAA8\uB4E0 \uC2DC\uBBFC\uC740 \uD3C9\uC0DD \uAC19\uC740 \uC9C1\uC5C5\uB9CC
+      \uC218\uD589\uD55C\uB2E4."
+    - "\uBAA8\uB4E0 \uC2DC\uBBFC\uC774 \uB178\uB3D9\uC744 \uB098\uB204\uC5B4 \uD558\uACE0,
+      \uC77C\uACFC \uD6C4 \uC5EC\uAC00\uB97C \uC990\uAE34\uB2E4."
+    - "\uB178\uB3D9\uC740 \uC624\uC9C1 \uB0A8\uC131\uB9CC \uC218\uD589\uD55C\uB2E4."
     hint: 
     hintDelay: 0
   stage3:
   - quizType: 2
-    question: "\uCC459\uC744 \uC785\uB825\uD558\uC138\uC694"
-    answer: "\uCC459"
+    question: "\u300E\uC720\uD1A0\uD53C\uC544\u300F\uC758 \uC800\uC790\uC778 \uC778\uBB3C\uC740
+      \uB204\uAD6C\uC778\uAC00?"
+    answer: "\uD1A0\uB9C8\uC2A4 \uBAA8\uC5B4"
     choices: []
-    hint: "\uCC459 \uD78C\uD2B81"
+    hint: "\uCD08\uC131 \u314C\u3141\u3145 \u3141\u3147, \uC601\uAD6D \uB974\uB124\uC0C1\uC2A4
+      \uC778\uBB38\uC8FC\uC758\uC790"
     hintDelay: 10
   - quizType: 2
-    question: "\uCC4599\uC744 \uC785\uB825\uD558\uC138\uC694"
-    answer: "\uCC4599"
+    question: "\u300E\uC720\uD1A0\uD53C\uC544\u300F\uC758 \uC2DC\uBBFC\uB4E4\uC740
+      \uC8FC\uAE30\uC801\uC73C\uB85C \uBB34\uC5C7\uC744 \uBC14\uAFB8\uB294 \uC8FC\uAC70
+      \uBC29\uC2DD\uC744 \uCDE8\uD558\uB294\uAC00?"
+    answer: "\uC9D1"
     choices: []
-    hint: "\uCC459 \uD78C\uD2B82"
+    hint: "\uCD08\uC131 \u3148, \uC0AC\uB294 \uACF3"
     hintDelay: 10

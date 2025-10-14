@@ -13,6 +13,8 @@ public class RankUIGameScene : MonoBehaviour
     public Button refreshButton;
     public Button closeButton;
     public TextMeshProUGUI titleText;
+    public ScrollRect scrollRect;
+
     [Header("My Rank UI")]
     public TextMeshProUGUI RankText;
     public TextMeshProUGUI NicknameText;
@@ -31,6 +33,8 @@ public class RankUIGameScene : MonoBehaviour
         gameObject.SetActive(true);
         LoadRanking();
         LoadMyRank();
+
+        StartCoroutine(ResetScrollToTopNextFrame());
     }
 
     void LoadRanking()
@@ -80,8 +84,10 @@ public class RankUIGameScene : MonoBehaviour
         rt.anchoredPosition = Vector2.zero;
 
         Debug.Log($"[AFTER LAYOUT FIX] Content anchoredPosition: {rt.anchoredPosition}, sizeDelta: {rt.sizeDelta}");
-    }
 
+        if (scrollRect != null)
+            scrollRect.verticalNormalizedPosition = 1f;
+    }
 
     void LoadMyRank()
     {
@@ -108,18 +114,14 @@ public class RankUIGameScene : MonoBehaviour
             string nickname = row["nickname"].ToString();
             if (nickname == myNickname)
             {
-                GameObject myRankObj = GameObject.Find("MyRanking (1)");
-                GameObject myNickObj = GameObject.Find("MyNickname (1)");
-                GameObject myScoreObj = GameObject.Find("MyScore (1)");
+                if (RankText != null)
+                    RankText.text = row["rank"].ToString();
 
-                if (myRankObj != null)
-                    myRankObj.GetComponent<TextMeshProUGUI>().text = row["rank"].ToString();
+                if (NicknameText != null)
+                    NicknameText.text = nickname;
 
-                if (myNickObj != null)
-                    myNickObj.GetComponent<TextMeshProUGUI>().text = nickname;
-
-                if (myScoreObj != null)
-                    myScoreObj.GetComponent<TextMeshProUGUI>().text = row["score"].ToString();
+                if (ScoreText != null)
+                    ScoreText.text = row["score"].ToString();
 
                 Debug.Log($"내 랭킹 UI 표시 완료 → {row["rank"]}위 | {nickname} | {row["score"]}");
                 found = true;
@@ -129,18 +131,14 @@ public class RankUIGameScene : MonoBehaviour
 
         if (!found)
         {
-            GameObject myRankObj = GameObject.Find("MyRanking (1)");
-            GameObject myNickObj = GameObject.Find("MyNickname (1)");
-            GameObject myScoreObj = GameObject.Find("MyScore (1)");
+            if (RankText != null)
+                RankText.text = "-";
 
-            if (myRankObj != null)
-                myRankObj.GetComponent<TextMeshProUGUI>().text = "-";
+            if (NicknameText != null)
+                NicknameText.text = myNickname;
 
-            if (myNickObj != null)
-                myNickObj.GetComponent<TextMeshProUGUI>().text = myNickname;
-
-            if (myScoreObj != null)
-                myScoreObj.GetComponent<TextMeshProUGUI>().text = "기록 없음";
+            if (ScoreText != null)
+                ScoreText.text = "기록 없음";
 
             Debug.Log($"닉네임 '{myNickname}' 에 해당하는 랭킹을 찾지 못함.");
         }
@@ -148,4 +146,13 @@ public class RankUIGameScene : MonoBehaviour
         StartCoroutine(RefreshLayoutNextFrame());
     }
 
+    private IEnumerator ResetScrollToTopNextFrame()
+    {
+        yield return null;
+        if (scrollRect != null)
+        {
+            scrollRect.verticalNormalizedPosition = 1f;
+            Debug.Log("랭킹창 열림 → 스크롤 최상단으로 초기화됨");
+        }
+    }
 }

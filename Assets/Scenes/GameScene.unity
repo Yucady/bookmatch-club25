@@ -888,6 +888,7 @@ MonoBehaviour:
   refreshButton: {fileID: 1301771241}
   closeButton: {fileID: 1750322708}
   titleText: {fileID: 524270759}
+  scrollRect: {fileID: 327335361}
   RankText: {fileID: 1775519614}
   NicknameText: {fileID: 482814166}
   ScoreText: {fileID: 694856680}
@@ -1099,6 +1100,7 @@ GameObject:
   m_Component:
   - component: {fileID: 359408597}
   - component: {fileID: 359408598}
+  - component: {fileID: 359408599}
   m_Layer: 0
   m_Name: UIManager
   m_TagString: Untagged
@@ -1156,6 +1158,20 @@ MonoBehaviour:
   rankingPanel: {fileID: 236358471}
   resultText: {fileID: 906151611}
   rankingPopup: {fileID: 236358475}
+--- !u!114 &359408599
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 359408596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e68b965cc92a67740a119ed0e08e5459, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scrollRect: {fileID: 327335361}
+  sensitivity: 30
 --- !u!1 &362671026
 GameObject:
   m_ObjectHideFlags: 0

@@ -114,8 +114,16 @@ public class UIManager : MonoBehaviour
         subjectivePanel.SetActive(true);
         answerInputField.text = "";
 
+        // Submit 버튼 클릭 이벤트
         submitButton.onClick.RemoveAllListeners();
-        submitButton.onClick.AddListener(() => QuizManagerRef.CheckAnswer(answerInputField.text));
+        submitButton.onClick.AddListener(() => SubmitSubjectiveAnswer());
+
+        // TMP InputField Enter 키 이벤트
+        answerInputField.onSubmit.RemoveAllListeners();
+        answerInputField.onSubmit.AddListener(delegate { SubmitSubjectiveAnswer(); });
+
+        // InputField 활성화 → 아무 키 입력 가능
+        StartCoroutine(EnableInputFieldFocus());
 
         // 힌트 초기화
         hintText.gameObject.SetActive(false);
@@ -124,6 +132,29 @@ public class UIManager : MonoBehaviour
         CancelInvoke(nameof(ShowHint));
         Invoke(nameof(ShowHint), hintDelay);
     }
+
+    private System.Collections.IEnumerator EnableInputFieldFocus()
+    {
+        yield return null; // 다음 프레임까지 대기 (TMP InputField 초기화 보장)
+        answerInputField.Select();
+        answerInputField.ActivateInputField();
+    }
+
+    private void SubmitSubjectiveAnswer()
+    {
+        QuizManagerRef.CheckAnswer(answerInputField.text);
+        answerInputField.text = ""; // 제출 후 초기화
+    }
+
+    void Update()
+    {
+        // Enter 키 입력으로 제출
+        if (subjectivePanel.activeSelf && answerInputField.isFocused && Input.GetKeyDown(KeyCode.Return))
+        {
+            SubmitSubjectiveAnswer();
+        }
+    }
+
 
     private void ShowHint()
     {
@@ -145,18 +176,11 @@ public class UIManager : MonoBehaviour
     public void ShowRankingPanel()
     {
         rankingPopup.Open();
-
-        //resultPanel.SetActive(false);
-        //rankingPanel.SetActive(true);
-
-        // 랭킹 불러오기 실행
-        //BackendRank.Instance.RankGet();
     }
 
     public void CloseRankingPanel()
     {
         rankingPanel.SetActive(false);
-        //resultPanel.SetActive(true);
     }
 
     public void UpdateTimer(float timeRemaining)
