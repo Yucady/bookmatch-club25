@@ -10,8 +10,10 @@ public class UIManager : MonoBehaviour
 
     [Header("공통 UI")]
     [SerializeField] private TextMeshProUGUI stageText;
-    [SerializeField] private TextMeshProUGUI timerText;  // 타이머 텍스트 추가
+    [SerializeField] private TextMeshProUGUI timerText;  // 타이머 텍스트
     [SerializeField] private Image bookCoverImage;
+    [SerializeField] private TextMeshProUGUI bookTitle;  
+    [SerializeField] private TextMeshProUGUI quizCreator; 
 
     [Header("퀴즈 패널")]
     [SerializeField] private GameObject quizPanel;
@@ -36,6 +38,8 @@ public class UIManager : MonoBehaviour
     [Header("결과 패널")]
     [SerializeField] private GameObject resultPanel;
     [SerializeField] private GameObject rankingPanel;
+    [SerializeField] private Sprite successSprite;
+    [SerializeField] private Sprite failSprite;
     [SerializeField] private TextMeshProUGUI resultText;
 
     public RankUIGameScene rankingPopup;
@@ -53,6 +57,9 @@ public class UIManager : MonoBehaviour
         Debug.Log($"ShowQuiz called: stage={stage}, quizType={quizType}, question={quiz.question}");
 
         bookCoverImage.sprite = bookQuiz.coverImage;
+        bookTitle.text = bookQuiz.bookTitle;           // 책 제목 표시
+        quizCreator.text = $"제작자: {bookQuiz.quizCreator}"; // 퀴즈 제작자 표시
+
         stageText.text = $"{stage}단계";
         questionText.text = quiz.question;
 
@@ -66,11 +73,9 @@ public class UIManager : MonoBehaviour
             case QuizType.OX:
                 ShowOXQuiz(quiz);
                 break;
-
             case QuizType.Multiple:
                 ShowMultipleChoiceQuiz(quiz);
                 break;
-
             case QuizType.Subjective:
                 ShowSubjectiveQuiz(quiz);
                 break;
@@ -155,7 +160,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-
     private void ShowHint()
     {
         hintText.gameObject.SetActive(true);
@@ -165,14 +169,23 @@ public class UIManager : MonoBehaviour
     {
         resultPanel.SetActive(true);
         resultText.text = "실패!";
+
+        Image panelImage = resultPanel.GetComponent<Image>();
+        if (panelImage != null && failSprite != null)
+            panelImage.sprite = failSprite;
     }
 
     public void ShowSuccessPanel()
     {
         resultPanel.SetActive(true);
         resultText.text = "성공!";
+
+        Image panelImage = resultPanel.GetComponent<Image>();
+        if (panelImage != null && successSprite != null)
+            panelImage.sprite = successSprite;
     }
-    
+
+
     public void ShowRankingPanel()
     {
         rankingPopup.Open();
@@ -193,55 +206,32 @@ public class UIManager : MonoBehaviour
     // ---------------------------------------------
     // 뒤끝 로그아웃 + 게임 재시작
     // ---------------------------------------------
-
     public void OnRestartButtonClicked()
     {
         Debug.Log("Restart 버튼 클릭됨. 게임 상태 완전 초기화 진행.");
 
-        // 1. 뒤끝 로그아웃
         var logout = Backend.BMember.Logout();
         if (logout.IsSuccess())
             Debug.Log("뒤끝 로그아웃 성공");
         else
             Debug.LogWarning("뒤끝 로그아웃 실패: " + logout);
 
-        // 2. PlayerPrefs 초기화
         PlayerPrefs.DeleteAll();
         PlayerPrefs.Save();
 
-        // 3. 싱글톤/게임 데이터 초기화
         var quizMgr = FindFirstObjectByType<QuizManager>();
         if (quizMgr != null)
             quizMgr.ResetData();
 
-        // 4. GameInitializer 제거
         if (GameInitializer.Instance != null)
             Destroy(GameInitializer.Instance.gameObject);
 
-        // 5. BackendManager 제거 → Backend 완전 초기화
         var backendMgr = FindFirstObjectByType<BackendManager>();
         if (backendMgr != null)
             Destroy(backendMgr.gameObject);
 
-        // 6. MainMenuScene 로드
-        UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenuScene");
+        SceneManager.LoadScene("MainMenuScene");
     }
-
-    // ---------------------------------------------
-    // 싱글톤/게임 데이터 초기화
-    // ---------------------------------------------
-    private void ResetSingletons()
-    {
-        // QuizManager 초기화
-        var quizMgr = FindFirstObjectByType<QuizManager>();
-        if (quizMgr != null)
-            quizMgr.ResetData();
-
-        // 필요 시 다른 싱글톤도 초기화 가능
-        // 예: BackendGameData.Instance.ResetData();
-        // 예: BackendRank.Instance.ResetData();
-    }
-
 
     private QuizManager QuizManagerRef => FindFirstObjectByType<QuizManager>();
 }

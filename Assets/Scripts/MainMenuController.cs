@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections;
 
 public class MainMenuController : MonoBehaviour
 {
@@ -10,15 +11,22 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] private TMP_InputField studentNumberInput;
     [SerializeField] private TextMeshProUGUI warningText;
 
-    void Start()
+    [Header("애니메이션")]
+    [SerializeField] private Image animationImage; // 결과 애니메이션 표시할 Image
+    [SerializeField] private Sprite[] animationFrames; // PNG 25장
+    [SerializeField] private float frameRate = 0.04f; // 25FPS = 1/25초
+
+    [Header("씬 이동 설정")]
+    [SerializeField] private string nextSceneName = "GameScene";
+
+    private void Start()
     {
-        // Enter 키로 입력 제출 가능하게 설정
+        // Enter 키로 입력 제출 가능
         studentNumberInput.onSubmit.AddListener(delegate { OnConfirmButton(); });
     }
 
-    void Update()
+    private void Update()
     {
-        // 입력창에 포커스된 상태에서 Enter 누르면 확인 처리
         if (studentNumberInput.isFocused && Input.GetKeyDown(KeyCode.Return))
         {
             OnConfirmButton();
@@ -30,7 +38,7 @@ public class MainMenuController : MonoBehaviour
         playerInputPanel.SetActive(true);
         warningText.text = "";
         studentNumberInput.text = "";
-        studentNumberInput.Select();  // 자동 포커스
+        studentNumberInput.Select(); // 자동 포커스
     }
 
     public void OnConfirmButton()
@@ -40,13 +48,14 @@ public class MainMenuController : MonoBehaviour
         if (IsValidStudentNumber(input))
         {
             PlayerPrefs.SetString("StudentNumber", input);
-            SceneManager.LoadScene("GameScene");
+            // 입력 즉시 애니메이션 재생 후 씬 이동
+            StartCoroutine(PlayAnimationAndLoadScene());
         }
         else
         {
             warningText.text = "학번은 4자리 숫자여야 합니다.";
             studentNumberInput.text = "";
-            studentNumberInput.Select(); // 다시 입력창 포커스
+            studentNumberInput.Select();
         }
     }
 
@@ -58,5 +67,21 @@ public class MainMenuController : MonoBehaviour
             if (!char.IsDigit(c)) return false;
         }
         return true;
+    }
+
+    private IEnumerator PlayAnimationAndLoadScene()
+    {
+        // 애니메이션 이미지 활성화
+        animationImage.gameObject.SetActive(true);
+
+        // 프레임 순서대로 재생
+        foreach (var frame in animationFrames)
+        {
+            animationImage.sprite = frame;
+            yield return new WaitForSeconds(frameRate);
+        }
+
+        // 애니메이션 종료 후 씬 이동
+        SceneManager.LoadScene(nextSceneName);
     }
 }
