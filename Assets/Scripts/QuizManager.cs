@@ -1,6 +1,5 @@
 using System.Linq;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 
 public class QuizManager : MonoBehaviour
 {
@@ -13,14 +12,13 @@ public class QuizManager : MonoBehaviour
     private int currentStage = 1;
 
     private string playerStudentNumber;
-    
     private bool isTimerRunning = false;
     public float remainingTime { get; private set; }
 
+    private bool[] judges; // 각 스테이지의 정답 여부
+    private bool gameEnded = false; // 중복 GameEnd 방지
 
-    private bool[] judges;
-
-    void Awake()
+    private void Awake()
     {
         if (Instance == null)
             Instance = this;
@@ -31,6 +29,7 @@ public class QuizManager : MonoBehaviour
     public void StartGame(string studentNumber, float startTime)
     {
         Debug.Log($"StartGame called with studentNumber: {studentNumber}");
+
         if (allBooksData == null || allBooksData.books == null || allBooksData.books.Length == 0)
         {
             Debug.LogError("퀴즈 데이터가 없습니다.");
@@ -40,11 +39,11 @@ public class QuizManager : MonoBehaviour
         playerStudentNumber = studentNumber;
         remainingTime = startTime;
         judges = new bool[3];
-
         currentBook = GetRandomBook();
         currentStage = 1;
-        LoadQuiz(currentStage);
+        gameEnded = false;
 
+        LoadQuiz(currentStage);
         isTimerRunning = true;
     }
 
@@ -57,12 +56,11 @@ public class QuizManager : MonoBehaviour
         {
             remainingTime = 0f;
             isTimerRunning = false;
-            GameEnd(false); // 시간 초과로 실패 처리
+            GameEnd(false); // 시간 초과
         }
 
         UIManager.Instance?.UpdateTimer(remainingTime);
     }
-
 
     private BookQuizData GetRandomBook()
     {
@@ -72,47 +70,52 @@ public class QuizManager : MonoBehaviour
 
     private void LoadQuiz(int stage)
     {
-        Debug.Log($"LoadQuiz called with stage: {stage}");
         if (currentBook == null)
         {
             Debug.LogError("현재 책 데이터가 없습니다.");
             return;
         }
 
-        if (stage == 1)
-            currentQuiz = GetRandomQuiz(currentBook.stage1);
-        else if (stage == 2)
-            currentQuiz = GetRandomQuiz(currentBook.stage2);
-        else if (stage == 3)
-            currentQuiz = GetRandomQuiz(currentBook.stage3);
-        else
+        switch (stage)
         {
-            Debug.LogWarning("알 수 없는 스테이지 번호입니다: " + stage);
+            case 1:
+                currentQuiz = GetRandomQuiz(currentBook.stage1);
+                break;
+            case 2:
+                currentQuiz = GetRandomQuiz(currentBook.stage2);
+                break;
+            case 3:
+                currentQuiz = GetRandomQuiz(currentBook.stage3);
+                break;
+            default:
+                Debug.LogWarning($"잘못된 스테이지 번호: {stage}");
+                return;
+        }
+
+        if (currentQuiz == null)
+        {
+            Debug.LogError($"스테이지 {stage} 퀴즈를 불러오지 못했습니다.");
             return;
         }
 
-        if (UIManager.Instance != null)
-            UIManager.Instance.ShowQuiz(currentBook, currentQuiz, stage, currentQuiz.quizType);
-        else
-            Debug.LogError("UIManager 인스턴스를 찾을 수 없습니다.");
+        UIManager.Instance?.ShowQuiz(currentBook, currentQuiz, stage, currentQuiz.quizType);
     }
 
     private QuizData GetRandomQuiz(QuizData[] quizArray)
     {
-        Debug.Log("현재 스테이지(GetRandomQuiz): " + currentStage);
         if (quizArray == null || quizArray.Length == 0)
         {
             Debug.LogError("퀴즈 배열이 비어있습니다.");
             return null;
         }
 
-        int randomIndex = Random.Range(0, quizArray.Length); // 0 ~ 1 두 개
+        int randomIndex = Random.Range(0, quizArray.Length);
         return quizArray[randomIndex];
     }
 
     public void CheckAnswer(string playerAnswer)
     {
-        Debug.Log($"CheckAnswer called with: {playerAnswer}");
+        if (gameEnded) return; // 이미 끝난 게임 방지
         if (currentQuiz == null)
         {
             Debug.LogError("현재 퀴즈가 없습니다.");
@@ -120,61 +123,39 @@ public class QuizManager : MonoBehaviour
         }
 
         bool isCorrect = playerAnswer.Trim().ToLower() == currentQuiz.answer.Trim().ToLower();
-        Debug.Log($"Answer is correct? {isCorrect}");
-
-        if (isCorrect)
-        {
-            judges[currentStage - 1] = true; // judges 에 정답 여부 저장 -> 정답 갯수에 따라 결과 패널에서의 별의 개수 변화
-            //Debug.Log("judges: " + currentStage + $"{isCorrect}");
-        }
-        else
-        {
-            judges[currentStage - 1] = false;
-            //Debug.Log("judges: " + currentStage + $"{isCorrect}");
-        }
+        judges[currentStage - 1] = isCorrect;
 
         currentStage++;
-        Debug.Log($"Moving to stage {currentStage}");
-        
         if (currentStage <= 3)
         {
             LoadQuiz(currentStage);
         }
         else
         {
-            //Debug.Log("GameEnd judge is conducted");
-            if (judges.All(j => j))
-            {
-                //Debug.Log($"judges in if(true): {judges[0]}, {judges[1]}, {judges[2]}");
-                GameEnd(true);
-            }
-            else
-            {
-                //Debug.Log($"judges in if(false): {judges[0]}, {judges[1]}, {judges[2]}");
-                GameEnd(false);
-            }
+            bool allCorrect = judges.All(j => j);
+            GameEnd(allCorrect);
         }
     }
 
-
     private void GameEnd(bool isSuccess)
     {
-        Debug.Log($"BackendLogin.Instance: {(BackendLogin.Instance == null ? "NULL" : "OK")}");
-        Debug.Log($"GameInitializer.Instance: {(GameInitializer.Instance == null ? "NULL" : "OK")}");
-
+        if (gameEnded) return;
+        gameEnded = true;
         isTimerRunning = false;
 
-        if (!isSuccess)
+        // 결과 패널 표시 + 남은 시간 표시
+        UIManager.Instance?.ShowResultPanel(isSuccess, remainingTime, judges);
+
+        Debug.Log($"결과 판정: {judges[0]}, {judges[1]}, {judges[2]}");
+
+        string studentNum = GameInitializer.Instance?.studentNumber ?? playerStudentNumber;
+        if (string.IsNullOrEmpty(studentNum))
         {
-            UIManager.Instance?.ShowFailPanel();
+            Debug.LogError("학생 번호 정보가 없습니다. 랭킹 등록 불가.");
             return;
         }
 
-        UIManager.Instance?.ShowSuccessPanel();
-
-        string studentNum = GameInitializer.Instance.studentNumber;
-
-        // 로그인 상태 확인 후 처리
+        // 비로그인 상태 → 로그인 후 랭킹 처리
         if (!BackendLogin.Instance.IsLoggedIn)
         {
             BackendLogin.Instance.CustomLogin(studentNum, studentNum, loginCallback =>
@@ -185,37 +166,29 @@ public class QuizManager : MonoBehaviour
                     return;
                 }
 
-                Debug.Log("로그인 성공");
-
-                // 닉네임 업데이트는 중복 시 무시
                 BackendLogin.Instance.UpdateNickname(studentNum, nicknameCallback =>
                 {
                     if (!nicknameCallback.IsSuccess())
-                        Debug.LogWarning($"닉네임 업데이트 실패: {nicknameCallback}");
+                        Debug.LogWarning("닉네임 업데이트 실패");
                     else
                         Debug.Log("닉네임 업데이트 성공");
 
-                    // 모든 준비 완료 → 게임 데이터 & 랭킹 처리
                     HandleGameDataAndRank(studentNum);
                 });
             });
         }
         else
         {
-            // 이미 로그인 상태이면 바로 게임 데이터 & 랭킹 처리
             HandleGameDataAndRank(studentNum);
         }
     }
 
-    // -----------------------------
-    // 게임 데이터 조회/삽입/업데이트 후 최고 점수 기준 랭킹 등록
     private void HandleGameDataAndRank(string studentNum)
     {
         BackendGameData.Instance.GameDataGet(getCallback =>
         {
             if (BackendGameData.userData == null)
             {
-                // 데이터 없으면 삽입
                 BackendGameData.Instance.GameDataInsert(remainingTime, studentNum, insertCallback =>
                 {
                     if (insertCallback.IsSuccess())
@@ -232,7 +205,6 @@ public class QuizManager : MonoBehaviour
             }
             else
             {
-                // 데이터 존재하면 업데이트
                 BackendGameData.Instance.GameDataUpdate(updateCallback =>
                 {
                     if (updateCallback.IsSuccess())
@@ -259,5 +231,6 @@ public class QuizManager : MonoBehaviour
         currentBook = null;
         currentQuiz = null;
         playerStudentNumber = null;
+        gameEnded = false;
     }
 }

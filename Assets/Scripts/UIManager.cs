@@ -10,10 +10,10 @@ public class UIManager : MonoBehaviour
 
     [Header("공통 UI")]
     [SerializeField] private TextMeshProUGUI stageText;
-    [SerializeField] private TextMeshProUGUI timerText;  // 타이머 텍스트
+    [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private Image bookCoverImage;
-    [SerializeField] private TextMeshProUGUI bookTitle;  
-    [SerializeField] private TextMeshProUGUI quizCreator; 
+    [SerializeField] private TextMeshProUGUI bookTitle;
+    [SerializeField] private TextMeshProUGUI quizCreator;
 
     [Header("퀴즈 패널")]
     [SerializeField] private GameObject quizPanel;
@@ -40,7 +40,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject rankingPanel;
     [SerializeField] private Sprite successSprite;
     [SerializeField] private Sprite failSprite;
-    [SerializeField] private TextMeshProUGUI resultText;
+    [SerializeField] private TextMeshProUGUI timeText;
+
+    [Header("정답 표시용 이미지")]
+    [SerializeField] private Image[] judgeImages; // Judge1~3
+    [SerializeField] private Sprite oSprite;
+    [SerializeField] private Sprite xSprite;
 
     public RankUIGameScene rankingPopup;
 
@@ -52,13 +57,16 @@ public class UIManager : MonoBehaviour
             Destroy(gameObject);
     }
 
+    // ------------------------------------------
+    // 퀴즈 표시 관련
+    // ------------------------------------------
     public void ShowQuiz(BookQuizData bookQuiz, QuizData quiz, int stage, QuizType quizType)
     {
         Debug.Log($"ShowQuiz called: stage={stage}, quizType={quizType}, question={quiz.question}");
 
         bookCoverImage.sprite = bookQuiz.coverImage;
-        bookTitle.text = bookQuiz.bookTitle;           // 책 제목 표시
-        quizCreator.text = $"제작자: {bookQuiz.quizCreator}"; // 퀴즈 제작자 표시
+        bookTitle.text = bookQuiz.bookTitle;
+        quizCreator.text = $"제작자: {bookQuiz.quizCreator}";
 
         stageText.text = $"{stage}단계";
         questionText.text = quiz.question;
@@ -119,18 +127,14 @@ public class UIManager : MonoBehaviour
         subjectivePanel.SetActive(true);
         answerInputField.text = "";
 
-        // Submit 버튼 클릭 이벤트
         submitButton.onClick.RemoveAllListeners();
         submitButton.onClick.AddListener(() => SubmitSubjectiveAnswer());
 
-        // TMP InputField Enter 키 이벤트
         answerInputField.onSubmit.RemoveAllListeners();
         answerInputField.onSubmit.AddListener(delegate { SubmitSubjectiveAnswer(); });
 
-        // InputField 활성화 → 아무 키 입력 가능
         StartCoroutine(EnableInputFieldFocus());
 
-        // 힌트 초기화
         hintText.gameObject.SetActive(false);
         hintText.text = quiz.hint;
 
@@ -140,7 +144,7 @@ public class UIManager : MonoBehaviour
 
     private System.Collections.IEnumerator EnableInputFieldFocus()
     {
-        yield return null; // 다음 프레임까지 대기 (TMP InputField 초기화 보장)
+        yield return null;
         answerInputField.Select();
         answerInputField.ActivateInputField();
     }
@@ -148,12 +152,11 @@ public class UIManager : MonoBehaviour
     private void SubmitSubjectiveAnswer()
     {
         QuizManagerRef.CheckAnswer(answerInputField.text);
-        answerInputField.text = ""; // 제출 후 초기화
+        answerInputField.text = "";
     }
 
     void Update()
     {
-        // Enter 키 입력으로 제출
         if (subjectivePanel.activeSelf && answerInputField.isFocused && Input.GetKeyDown(KeyCode.Return))
         {
             SubmitSubjectiveAnswer();
@@ -165,36 +168,35 @@ public class UIManager : MonoBehaviour
         hintText.gameObject.SetActive(true);
     }
 
-    public void ShowFailPanel()
+    // ------------------------------------------
+    // 결과 패널 (통합)
+    // ------------------------------------------
+    public void ShowResultPanel(bool isSuccess, float remainingTime, bool[] judges)
     {
         resultPanel.SetActive(true);
-        resultText.text = "실패!";
 
         Image panelImage = resultPanel.GetComponent<Image>();
-        if (panelImage != null && failSprite != null)
-            panelImage.sprite = failSprite;
+        if (panelImage != null)
+            panelImage.sprite = isSuccess ? successSprite : failSprite;
+
+        // 남은 시간 표시
+        timeText.text = $"{remainingTime:F1}";
+
+        // 정답 여부 표시
+        for (int i = 0; i < judgeImages.Length; i++)
+        {
+            if (i < judges.Length)
+                judgeImages[i].sprite = judges[i] ? oSprite : xSprite;
+            else
+                judgeImages[i].sprite = null;
+        }
     }
 
-    public void ShowSuccessPanel()
-    {
-        resultPanel.SetActive(true);
-        resultText.text = "성공!";
-
-        Image panelImage = resultPanel.GetComponent<Image>();
-        if (panelImage != null && successSprite != null)
-            panelImage.sprite = successSprite;
-    }
-
-
-    public void ShowRankingPanel()
-    {
-        rankingPopup.Open();
-    }
-
-    public void CloseRankingPanel()
-    {
-        rankingPanel.SetActive(false);
-    }
+    // ------------------------------------------
+    // 랭킹 및 타이머, 재시작
+    // ------------------------------------------
+    public void ShowRankingPanel() => rankingPopup.Open();
+    public void CloseRankingPanel() => rankingPanel.SetActive(false);
 
     public void UpdateTimer(float timeRemaining)
     {
@@ -203,9 +205,6 @@ public class UIManager : MonoBehaviour
         timerText.text = $"{minutes:00}:{seconds:00}";
     }
 
-    // ---------------------------------------------
-    // 뒤끝 로그아웃 + 게임 재시작
-    // ---------------------------------------------
     public void OnRestartButtonClicked()
     {
         Debug.Log("Restart 버튼 클릭됨. 게임 상태 완전 초기화 진행.");
