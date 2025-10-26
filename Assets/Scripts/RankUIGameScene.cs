@@ -12,7 +12,6 @@ public class RankUIGameScene : MonoBehaviour
     public Transform contentParent;
     public Button refreshButton;
     public Button closeButton;
-    public TextMeshProUGUI titleText;
     public ScrollRect scrollRect;
 
     [Header("My Rank UI")]
@@ -25,7 +24,6 @@ public class RankUIGameScene : MonoBehaviour
     void Start()
     {
         refreshButton.onClick.AddListener(LoadRanking);
-        titleText.text = "RANKING";
     }
 
     public void Open()

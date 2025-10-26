@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 4d9e727df6e4c664ead0f265d3d29ed9
+guid: 10b953222d3d88542b849e696d12b923
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4658237752602338756
-    second: BookCover17_0
+      213: 2604234825482035907
+    second: GameIamge1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: BookCover17_0
+      name: GameIamge1_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 441
-        height: 638
+        width: 1399
+        height: 929
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c3ad2d4c17d9a5fb0800000000000000
-      internalID: -4658237752602338756
+      spriteID: 3c2ee84a6c9142420800000000000000
+      internalID: 2604234825482035907
       vertices: []
       indices: 
       edges: []
@@ -160,8 +160,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      BookCover17_0: -4658237752602338756
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -64,11 +64,3 @@ MonoBehaviour:
     choices: []
     hint: "\uCD08\uC131 \u3147\u3145\u3142\u3139"
     hintDelay: 10
-  - quizType: 2
-    question: "\u201C\uD3ED\uD48D\uC758 \uC5B8\uB355\u201D \uC5D0\uC11C \uCE90\uC11C\uB9B0\uACFC
-      \uD788\uC2A4\uD074\uB9AC\uD504\uC758 \uC774\uC57C\uAE30\uB97C \uB4E4\uB824\uC8FC\uB294
-      \uC778\uBB3C(\uD654\uC790)\uC758 \uC774\uB984\uC740?"
-    answer: "\uB12C\uB9AC \uB518"
-    choices: []
-    hint: "\uCD08\uC131 \u3134\u3139 \u3137"
-    hintDelay: 10

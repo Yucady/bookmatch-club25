@@ -61,11 +61,3 @@ MonoBehaviour:
     choices: []
     hint: "\uCD08\uC131 \u3134\u314D\u3139\u3147"
     hintDelay: 10
-  - quizType: 2
-    question: "\uB3D9\uBB3C \uB18D\uC7A5\uC5D0\uC11C \uB3D9\uBB3C\uB4E4\uC774 \uB9CC\uB4E0
-      \uD5CC\uBC95\uACFC \uAC19\uC740 \uADDC\uCE59\uC740 \uBB34\uC5C7\uC774\uB77C\uACE0
-      \uBD88\uB800\uB098\uC694?"
-    answer: "\uC77C\uACF1 \uACC4\uBA85"
-    choices: []
-    hint: "\uCD08\uC131 \u3147\u3131 \u3131\u3141"
-    hintDelay: 10

@@ -155,7 +155,7 @@ public class QuizManager : MonoBehaviour
             return;
         }
 
-        // 비로그인 상태 → 로그인 후 랭킹 처리
+        // 비로그인 상태 → 로그인 후 닉네임 처리 → 게임데이터 처리(항상) + 랭킹 삽입은 isSuccess일 때만 수행
         if (!BackendLogin.Instance.IsLoggedIn)
         {
             BackendLogin.Instance.CustomLogin(studentNum, studentNum, loginCallback =>
@@ -173,17 +173,20 @@ public class QuizManager : MonoBehaviour
                     else
                         Debug.Log("닉네임 업데이트 성공");
 
-                    HandleGameDataAndRank(studentNum);
+                    // 변경: isSuccess 값을 함께 전달
+                    HandleGameDataAndRank(studentNum, isSuccess);
                 });
             });
         }
         else
         {
-            HandleGameDataAndRank(studentNum);
+            HandleGameDataAndRank(studentNum, isSuccess);
         }
     }
 
-    private void HandleGameDataAndRank(string studentNum)
+
+    // 게임 데이터 조회/삽입/업데이트 후 (조건부) 최고 점수 기준 랭킹 등록
+    private void HandleGameDataAndRank(string studentNum, bool shouldInsertRank)
     {
         BackendGameData.Instance.GameDataGet(getCallback =>
         {
@@ -194,8 +197,13 @@ public class QuizManager : MonoBehaviour
                     if (insertCallback.IsSuccess())
                     {
                         Debug.Log("게임 데이터 삽입 완료");
-                        BackendRank.Instance.RankInsertHighScore(remainingTime, studentNum);
-                        BackendRank.Instance.RankGet();
+
+                        // 랭킹 삽입은 오직 shouldInsertRank가 true일 때만 수행
+                        if (shouldInsertRank)
+                        {
+                            BackendRank.Instance.RankInsertHighScore(remainingTime, studentNum);
+                            BackendRank.Instance.RankGet();
+                        }
                     }
                     else
                     {
@@ -210,8 +218,12 @@ public class QuizManager : MonoBehaviour
                     if (updateCallback.IsSuccess())
                     {
                         Debug.Log("게임 데이터 업데이트 완료");
-                        BackendRank.Instance.RankInsertHighScore(remainingTime, studentNum);
-                        BackendRank.Instance.RankGet();
+
+                        if (shouldInsertRank)
+                        {
+                            BackendRank.Instance.RankInsertHighScore(remainingTime, studentNum);
+                            BackendRank.Instance.RankGet();
+                        }
                     }
                     else
                     {
@@ -221,6 +233,7 @@ public class QuizManager : MonoBehaviour
             }
         });
     }
+
 
     public void ResetData()
     {

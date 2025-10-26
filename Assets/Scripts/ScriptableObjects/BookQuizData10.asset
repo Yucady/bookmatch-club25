@@ -64,12 +64,3 @@ MonoBehaviour:
     choices: []
     hint: "\uCD08\uC131 \u3148\u3148"
     hintDelay: 10
-  - quizType: 2
-    question: "\uD1B5\uCE58\uC790\uAC00 OO\uC774 \uB418\uC5B4\uC57C \uD558\uB294
-      \uAC83\uB3C4, \uC774\uC0C1\uAD6D\uAC00\uC758 \uAD6C\uC131\uC6D0\uC774 OO\uC744
-      \uBCF8\uBCF4\uAE30\uB85C \uBCF4\uACE0 \uC790\uAE30\uB3C4 \uC2A4\uC2A4\uB85C
-      \uB178\uB825\uD574\uC11C OO\uCC98\uB7FC \uB418\uC5B4\uC57C\uD55C\uB2E4."
-    answer: "\uCCA0\uC778"
-    choices: []
-    hint: "\uCD08\uC131 \u314A\u3147"
-    hintDelay: 10
