@@ -70,16 +70,6 @@ public class UIManager : MonoBehaviour
         {
             HandleEscape();
         }
-
-        // 주관식 Enter 제출 처리
-        if (subjectivePanel.activeSelf && answerInputField.isFocused)
-        {
-            // IME 조합 중이면 제출 막기
-            if (Input.GetKeyDown(KeyCode.Return) && string.IsNullOrEmpty(Input.compositionString))
-            {
-                SubmitSubjectiveAnswer();
-            }
-        }
     }
 
     #region 퀴즈 표시
