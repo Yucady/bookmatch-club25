@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections;
 
 public class UIManager : MonoBehaviour
 {
@@ -43,9 +44,14 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timeText;
 
     [Header("정답 표시용 이미지")]
-    [SerializeField] private Image[] judgeImages; // Judge1~3
+    [SerializeField] private Image[] judgeImages;
     [SerializeField] private Sprite oSprite;
     [SerializeField] private Sprite xSprite;
+
+    [Header("ESC/NextButton 관련")]
+    [SerializeField] private GameObject usernameInputPanel;
+    [SerializeField] private GameObject gameGuideTotalPanel;
+    [SerializeField] private GameObject nextButton;
 
     public RankUIGameScene rankingPopup;
 
@@ -57,13 +63,29 @@ public class UIManager : MonoBehaviour
             Destroy(gameObject);
     }
 
-    // ------------------------------------------
-    // 퀴즈 표시 관련
-    // ------------------------------------------
+    private void Update()
+    {
+        // ESC 키 입력 처리
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            HandleEscape();
+        }
+
+        // 주관식 Enter 제출 처리
+        if (subjectivePanel.activeSelf && answerInputField.isFocused)
+        {
+            // IME 조합 중이면 제출 막기
+            if (Input.GetKeyDown(KeyCode.Return) && string.IsNullOrEmpty(Input.compositionString))
+            {
+                SubmitSubjectiveAnswer();
+            }
+        }
+    }
+
+    #region 퀴즈 표시
+
     public void ShowQuiz(BookQuizData bookQuiz, QuizData quiz, int stage, QuizType quizType)
     {
-        Debug.Log($"ShowQuiz called: stage={stage}, quizType={quizType}, question={quiz.question}");
-
         bookCoverImage.sprite = bookQuiz.coverImage;
         bookTitle.text = bookQuiz.bookTitle;
         quizCreator.text = $"제작자: {bookQuiz.quizCreator}";
@@ -130,9 +152,6 @@ public class UIManager : MonoBehaviour
         submitButton.onClick.RemoveAllListeners();
         submitButton.onClick.AddListener(() => SubmitSubjectiveAnswer());
 
-        answerInputField.onSubmit.RemoveAllListeners();
-        answerInputField.onSubmit.AddListener(delegate { SubmitSubjectiveAnswer(); });
-
         StartCoroutine(EnableInputFieldFocus());
 
         hintText.gameObject.SetActive(false);
@@ -142,7 +161,7 @@ public class UIManager : MonoBehaviour
         Invoke(nameof(ShowHint), hintDelay);
     }
 
-    private System.Collections.IEnumerator EnableInputFieldFocus()
+    private IEnumerator EnableInputFieldFocus()
     {
         yield return null;
         answerInputField.Select();
@@ -151,16 +170,14 @@ public class UIManager : MonoBehaviour
 
     private void SubmitSubjectiveAnswer()
     {
-        QuizManagerRef.CheckAnswer(answerInputField.text);
-        answerInputField.text = "";
-    }
+        string rawInput = answerInputField.text;
+        string normalizedInput = rawInput.Trim()
+                                         .Normalize(System.Text.NormalizationForm.FormC)
+                                         .Replace("\u200B", "");
 
-    void Update()
-    {
-        if (subjectivePanel.activeSelf && answerInputField.isFocused && Input.GetKeyDown(KeyCode.Return))
-        {
-            SubmitSubjectiveAnswer();
-        }
+        Debug.Log($"[주관식 입력 디버그] Raw: '{rawInput}' → Normalized: '{normalizedInput}'");
+        QuizManagerRef.CheckAnswer(normalizedInput);
+        answerInputField.text = "";
     }
 
     private void ShowHint()
@@ -168,9 +185,10 @@ public class UIManager : MonoBehaviour
         hintText.gameObject.SetActive(true);
     }
 
-    // ------------------------------------------
-    // 결과 패널 (통합)
-    // ------------------------------------------
+    #endregion
+
+    #region 결과/랭킹
+
     public void ShowResultPanel(bool isSuccess, float remainingTime, bool[] judges)
     {
         resultPanel.SetActive(true);
@@ -179,10 +197,8 @@ public class UIManager : MonoBehaviour
         if (panelImage != null)
             panelImage.sprite = isSuccess ? successSprite : failSprite;
 
-        // 남은 시간 표시
         timeText.text = $"{remainingTime:F1}";
 
-        // 정답 여부 표시
         for (int i = 0; i < judgeImages.Length; i++)
         {
             if (i < judges.Length)
@@ -192,9 +208,6 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // ------------------------------------------
-    // 랭킹 및 타이머, 재시작
-    // ------------------------------------------
     public void ShowRankingPanel() => rankingPopup.Open();
     public void CloseRankingPanel() => rankingPanel.SetActive(false);
 
@@ -204,6 +217,33 @@ public class UIManager : MonoBehaviour
         int seconds = Mathf.FloorToInt(timeRemaining % 60);
         timerText.text = $"{minutes:00}:{seconds:00}";
     }
+
+    #endregion
+
+    #region ESC 처리
+
+    private void HandleEscape()
+    {
+        if (gameGuideTotalPanel != null && gameGuideTotalPanel.activeSelf)
+        {
+            gameGuideTotalPanel.SetActive(false);
+            return;
+        }
+
+        if (usernameInputPanel != null && usernameInputPanel.activeSelf)
+        {
+            usernameInputPanel.SetActive(false);
+
+            if (nextButton != null)
+                nextButton.SetActive(true);
+
+            return;
+        }
+    }
+
+    #endregion
+
+    #region 재시작
 
     public void OnRestartButtonClicked()
     {
@@ -231,6 +271,8 @@ public class UIManager : MonoBehaviour
 
         SceneManager.LoadScene("MainMenuScene");
     }
+
+    #endregion
 
     private QuizManager QuizManagerRef => FindFirstObjectByType<QuizManager>();
 }

@@ -902,7 +902,7 @@ MonoBehaviour:
   m_text: "\u200B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0274e48cf89df5a4183a218f1f218dd8, type: 2}
-  m_sharedMaterial: {fileID: 0}
+  m_sharedMaterial: {fileID: -1868842360388225133, guid: 0274e48cf89df5a4183a218f1f218dd8, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1495,7 +1495,7 @@ MonoBehaviour:
 '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0274e48cf89df5a4183a218f1f218dd8, type: 2}
-  m_sharedMaterial: {fileID: 0}
+  m_sharedMaterial: {fileID: -1868842360388225133, guid: 0274e48cf89df5a4183a218f1f218dd8, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1589,7 +1589,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &602457167
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1664,6 +1664,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1090771572}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &602457169
 MonoBehaviour:
@@ -1867,7 +1879,7 @@ MonoBehaviour:
 '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0274e48cf89df5a4183a218f1f218dd8, type: 2}
-  m_sharedMaterial: {fileID: 0}
+  m_sharedMaterial: {fileID: -1868842360388225133, guid: 0274e48cf89df5a4183a218f1f218dd8, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2212,6 +2224,7 @@ GameObject:
   - component: {fileID: 1005884390}
   - component: {fileID: 1005884392}
   - component: {fileID: 1005884391}
+  - component: {fileID: 1005884393}
   m_Layer: 5
   m_Name: UsernameInputPanel
   m_TagString: Untagged
@@ -2279,6 +2292,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1005884389}
   m_CullTransparentMesh: 1
+--- !u!95 &1005884393
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1005884389}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7d561e490bc7fc74794b2d2e4fbd2a8a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1090771572
 GameObject:
   m_ObjectHideFlags: 0
@@ -3669,6 +3704,7 @@ MonoBehaviour:
   loginPanel: {fileID: 379077904}
   usernameInputPanel: {fileID: 1005884389}
   gameGuideTotalPanel: {fileID: 916884039}
+  nextButton: {fileID: 1090771572}
 --- !u!4 &1716976388
 Transform:
   m_ObjectHideFlags: 0
@@ -4367,7 +4403,7 @@ MonoBehaviour:
   m_text: Ex) 2801
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0274e48cf89df5a4183a218f1f218dd8, type: 2}
-  m_sharedMaterial: {fileID: 0}
+  m_sharedMaterial: {fileID: -1868842360388225133, guid: 0274e48cf89df5a4183a218f1f218dd8, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

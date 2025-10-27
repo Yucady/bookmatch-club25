@@ -6,6 +6,7 @@ public class MainMenuUIManager : MonoBehaviour
     public GameObject loginPanel;
     public GameObject usernameInputPanel;
     public GameObject gameGuideTotalPanel;
+    public GameObject nextButton;
 
     private void Update()
     {
@@ -22,15 +23,20 @@ public class MainMenuUIManager : MonoBehaviour
     private void HandleEscape()
     {
         // 우선순위: GameExplanation → InputPanel → LoginPanel
-        if (usernameInputPanel != null && usernameInputPanel.activeSelf)
+        if (gameGuideTotalPanel != null && gameGuideTotalPanel.activeSelf)
         {
-            ClosePanel(usernameInputPanel);
+            ClosePanel(gameGuideTotalPanel);
             return;
         }
 
         if (usernameInputPanel != null && usernameInputPanel.activeSelf)
         {
             ClosePanel(usernameInputPanel);
+
+            // ESC로 닫으면 NextButton 활성화
+            if (nextButton != null)
+                nextButton.SetActive(true);
+
             return;
         }
 
@@ -39,9 +45,8 @@ public class MainMenuUIManager : MonoBehaviour
             ClosePanel(loginPanel);
             return;
         }
-
-        // 모두 닫혀 있으면 무시 (또는 종료 처리 가능)
     }
+
 
     /// <summary>
     /// 지정한 패널을 닫는다.

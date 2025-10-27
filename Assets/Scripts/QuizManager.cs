@@ -116,15 +116,39 @@ public class QuizManager : MonoBehaviour
     public void CheckAnswer(string playerAnswer)
     {
         if (gameEnded) return; // 이미 끝난 게임 방지
+
         if (currentQuiz == null)
         {
             Debug.LogError("현재 퀴즈가 없습니다.");
             return;
         }
 
-        bool isCorrect = playerAnswer.Trim().ToLower() == currentQuiz.answer.Trim().ToLower();
+        // 1. 입력값 전처리 및 정규화
+        string normalizedPlayer = playerAnswer.Trim()
+                                              .ToLower()
+                                              .Normalize(System.Text.NormalizationForm.FormC)
+                                              .Replace("\u200B", ""); // 제로폭문자 제거
+
+        // 2. 정답 전처리 및 정규화
+        string normalizedAnswer = currentQuiz.answer.Trim()
+                                                    .ToLower()
+                                                    .Normalize(System.Text.NormalizationForm.FormC)
+                                                    .Replace("\u200B", "");
+
+        // 3. 디버깅 로그
+        Debug.Log($"[정답 비교 디버그] 입력값: '{normalizedPlayer}' | 정답: '{normalizedAnswer}'");
+
+        // 4. 정답 비교
+        bool isCorrect = normalizedPlayer == normalizedAnswer;
         judges[currentStage - 1] = isCorrect;
 
+        // 5. 결과 로그
+        if (isCorrect)
+            Debug.Log($"[정답 비교 디버그] 정답 ({currentStage}단계)");
+        else
+            Debug.Log($"[정답 비교 디버그] 오답 ({currentStage}단계)");
+
+        // 6. 다음 단계 또는 게임 종료
         currentStage++;
         if (currentStage <= 3)
         {
@@ -136,6 +160,7 @@ public class QuizManager : MonoBehaviour
             GameEnd(allCorrect);
         }
     }
+
 
     private void GameEnd(bool isSuccess)
     {
