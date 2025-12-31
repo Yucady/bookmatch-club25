@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24b6867e3bf958243bee765b9289809d, type: 3}
+  m_Name: BookQuizData15
+  m_EditorClassIdentifier: 
+  bookTitle: "\uBCC0\uC2E0 - \uD504\uB780\uCE20 \uCE74\uD504\uCE74"
+  quizCreator: "2126 \uCD5C\uC601\uAE30"
+  coverImage: {fileID: -5050556094979932444, guid: fbfdfb4db9c1bbb4a9e44e74214de7ff, type: 3}
+  stage1:
+  - quizType: 0
+    question: "\uADF8\uB808\uACE0\uB974\uB294 \uC5B4\uB290 \uB0A0 \uC544\uCE68 \uAC70\uB300\uD55C
+      \uACE0\uC591\uC774\uB85C \uBCC0\uD55C\uB2E4"
+    answer: X
+    choices: []
+    hint: 
+    hintDelay: 0
+  - quizType: 0
+    question: "\uAC00\uC871\uB4E4\uC740 \uBCC0\uD55C \uADF8\uB97C \uB05D\uAE4C\uC9C0
+      \uC815\uC131\uC2A4\uB808 \uB3CC\uBD10\uC900\uB2E4"
+    answer: X
+    choices: []
+    hint: 
+    hintDelay: 0
+  stage2:
+  - quizType: 1
+    question: "\u300E\uBCC0\uC2E0\u300F\uC758 \uC8FC\uC81C\uB97C \uAC00\uC7A5 \uC798
+      \uC124\uBA85\uD55C \uAC83\uC740?"
+    answer: "\uC778\uAC04\uC758 \uC774\uAE30\uC2EC\uACFC \uC18C\uC678"
+    choices:
+    - "\uC778\uAC04\uC758 \uC774\uAE30\uC2EC\uACFC \uC18C\uC678"
+    - "\uACFC\uD559\uAE30\uC220 \uBC1C\uC804\uC758 \uACF5\uD3EC"
+    - "\uB3D9\uBB3C \uC138\uACC4\uC758 \uC794\uD639\uC131"
+    - "\uBAA8\uD5D8\uACFC \uC6A9\uAE30"
+    hint: 
+    hintDelay: 0
+  - quizType: 1
+    question: "\uADF8\uB808\uACE0\uB974\uAC00 \uC8FD\uC740 \uB4A4, \uAC00\uC871\uB4E4\uC740
+      \uC5B4\uB5BB\uAC8C \uD589\uB3D9\uD558\uB294\uAC00?"
+    answer: "\uC624\uD788\uB824 \uD574\uBC29\uAC10\uC744 \uB290\uB07C\uBA70 \uC0C8\uB85C\uC6B4
+      \uC0B6\uC744 \uACC4\uD68D\uD55C\uB2E4."
+    choices:
+    - "\uAE4A\uC740 \uC2AC\uD514\uC5D0 \uBE60\uC838 \uBC29\uC5D0 \uD2C0\uC5B4\uBC15\uD78C\uB2E4."
+    - "\uC7A5\uB840\uB97C \uC131\uB300\uD558\uAC8C \uCE58\uB978\uB2E4."
+    - "\uC624\uD788\uB824 \uD574\uBC29\uAC10\uC744 \uB290\uB07C\uBA70 \uC0C8\uB85C\uC6B4
+      \uC0B6\uC744 \uACC4\uD68D\uD55C\uB2E4."
+    - "\uAC00\uC871\uB4E4\uC740 \uADF8\uB808\uACE0\uB974\uC758 \uBE48\uC790\uB9AC\uC5D0
+      \uD5C8\uC804\uD568\uC744 \uB290\uAEF4\uC9C0\uB9CC \uD798\uB4E0 \uC2DC\uAC04\uC774
+      \uB05D\uB0AC\uC74C\uC744 \uC548\uB3C4\uD55C\uB2E4. "
+    hint: 
+    hintDelay: 0
+  stage3:
+  - quizType: 2
+    question: "\uADF8\uB808\uACE0\uB974\uAC00 \uBCC0\uC2E0\uD55C \uD6C4, \uAC00\uC7A5
+      \uBA3C\uC800 \uB290\uB080 \uAC10\uAC01\uC740 OOO\uC774\uC5C8\uB2E4. "
+    answer: "\uAC00\uB824\uC6C0"
+    choices: []
+    hint: "\uCD08\uC131 \u3131\u3139\u3147, \uAE01\uACE0 \uC2F6\uC740 \uAE30\uBD84\uC744
+      \uC77C\uC73C\uD0A4\uB294 \uAC10\uAC01"
+    hintDelay: 10

@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24b6867e3bf958243bee765b9289809d, type: 3}
+  m_Name: BookQuizData2
+  m_EditorClassIdentifier: 
+  bookTitle: "\uBA85\uC2EC\uBCF4\uAC10 - \uCD94\uC801"
+  quizCreator: "1328 \uC8FC\uC815\uD64D"
+  coverImage: {fileID: -782350816437592625, guid: 107eaa726444ed6459487f909d0bb1fc, type: 3}
+  stage1:
+  - quizType: 0
+    question: "\uBA85\uC2EC\uBCF4\uAC10\uC740 \uACE0\uB824 \uB9D0\uC5D0 \uD3B8\uCC2C\uB41C
+      \uCC45\uC774\uB2E4."
+    answer: X
+    choices: []
+    hint: 
+    hintDelay: 0
+  - quizType: 0
+    question: "\uC2EC\uBCF4\uAC10\uC740 \uB2E8\uC21C\uD788 \uC720\uAD50 \uACBD\uC804\uB9CC\uC744
+      \uBAA8\uC544\uB193\uC740 \uCC45\uC774\uB2E4."
+    answer: X
+    choices: []
+    hint: 
+    hintDelay: 0
+  stage2:
+  - quizType: 1
+    question: "\uBA85\uC2EC\uBCF4\uAC10\uC774 \uD3B8\uCC2C\uB41C \uC8FC\uC694 \uBAA9\uC801\uC740
+      \uBB34\uC5C7\uC77C\uAE4C?"
+    answer: "\uBC31\uC131\uB4E4\uC5D0\uAC8C \uB3C4\uB355\uC801 \uC0DD\uD65C \uC9C0\uCE68
+      \uC81C\uACF5"
+    choices:
+    - "\uAD70\uC0AC \uC804\uB7B5 \uC804\uC218"
+    - "\uBC31\uC131\uB4E4\uC5D0\uAC8C \uB3C4\uB355\uC801 \uC0DD\uD65C \uC9C0\uCE68
+      \uC81C\uACF5"
+    - "\uC655\uC2E4\uC758 \uAD8C\uC704 \uAC15\uD654"
+    - "\uC678\uAD6D \uBB38\uBB3C \uC18C\uAC1C"
+    hint: 
+    hintDelay: 0
+  - quizType: 1
+    question: "\uBA85\uC2EC\uBCF4\uAC10\uC740 \uC5EC\uB7EC \uACBD\uC804\uC5D0\uC11C
+      \uC88B\uC740 \uAE00\uADC0\uB97C \uBAA8\uC544 \uC5EE\uC740 \uCC45\uC774\uB2E4.
+      \uADF8\uB807\uB2E4\uBA74 \uBA85\uC2EC\uBCF4\uAC10\uC758 \uC131\uACA9\uC744
+      \uAC00\uC7A5 \uC798 \uC124\uBA85\uD55C \uAC83\uC740?"
+    answer: "\uAD50\uD6C8\uC11C"
+    choices:
+    - "\uC5ED\uC0AC\uC11C"
+    - "\uC2DC\uC9D1"
+    - "\uACFC\uD559\uC11C"
+    - "\uAD50\uD6C8\uC11C"
+    hint: 
+    hintDelay: 0
+  stage3:
+  - quizType: 2
+    question: "\uBA85\uC2EC\uBCF4\uAC10\uC758 \uCCAB \uC7A5 \uC5D0\uC11C \uAC15\uC870\uD558\uB294
+      \uAC00\uC7A5 \uC911\uC694\uD55C \uB355\uBAA9\uC740 \uBB34\uC5C7\uC778\uAC00?"
+    answer: "\uD6A8"
+    choices: []
+    hint: "\u314E"
+    hintDelay: 10
